@@ -20,7 +20,13 @@ import numpy as np
 import seaborn as sns 
 ~~~
 
-#[1-1.빅데이터 수집] 
+##matplot 불러오고, plt로 정의하기
+~~~py
+import matplotlib.pyplot as plt
+%matplotlib inline
+~~~
+
+#[1-1.빅데이터 수집]
 
 #[1-2.빅데이터 분석]
 
