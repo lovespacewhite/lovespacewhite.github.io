@@ -4,11 +4,21 @@
 
 #[0-2.SW도구 불러오기]
 
-##판다스 불러오고, pd로 정의하기 
+##pandas 불러오고, pd로 정의하기 
 ~~~py
 import pandas as pd
 ~~~
 
+##numpy 불러오고, np로 정의하기
+~~~py
+import numpy as np
+~~~
+
+##seaborn 불러오고, sns로 정의하기
+~~~py
+!pip install seaborn
+import seaborn as sns 
+~~~
 
 #[1-1.빅데이터 수집] 
 
