@@ -14,33 +14,33 @@ dd : 해당쉘 삭제
 
 ---
 
-# [0-2.SW도구 불러오기]
+# [0-2.도구 불러오기]
 
-## pandas 불러오고, pd로 정의하기 
+## pandas 불러오고, pd로 정의
 ~~~py
 import pandas as pd
 ~~~
 
-## numpy 불러오고, np로 정의하기
+## numpy 불러오고, np로 정의
 ~~~py
 import numpy as np
 ~~~
 
-## seaborn 설치 및 불러오고, sns로 정의하기
+## seaborn 설치 및 불러오고, sns로 정의
 (!: 리눅스 프롬프트 명령어)
 ~~~py
 !pip install seaborn
 import seaborn as sns 
 ~~~
 
-## matplot 불러오고, plt로 정의하기
+## matplot 불러오고, plt로 정의
 (%: 주피터랩 명령어)
 ~~~py
 %matplotlib inline
 import matplotlib.pyplot as plt
 ~~~
 
-## 텐서플로 불러오고, tf로 정의하기
+## 텐서플로 불러오고, tf로 정의
 ~~~py
 import tensorflow as tf
 ~~~
@@ -52,13 +52,88 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation, Dropout
 ~~~
 
-## [모델] sklearn에서, 선형회귀모델 불러오기
+## [모델] sklearn에서, 선형회귀모델(LinearRegression) 불러오기
 ~~~py
 from sklearn.family import model
 from sklearn.linear_model import LinearRegression
 ~~~
 
+## [모델] sklearn에서, 분류회귀모델(Logistic Regression) 불러오기
+(설명: 분류모델 주로 활용)
+~~~py
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report  
+~~~
+ 
+## [모델] sklearn에서, 랜덤포레스트 불러오기
+(설명: 의사결정나무 2개에서, 여러개를 더해 예측율을 높임)
+~~~py
+from sklearn.ensemble import RandomForestRegressor
+~~~
+ 
+## [모델] sklearn에서, 의사결정나무 불러오기
+(설명: 분류/회귀가능한 다재다능, 다소복잡한 데이터셋도 학습가능)
+~~~py
+from sklearn.tree import DecisionTreeClassifier
+~~~
+ 
+## [모델] AdaBoost
+
+## [모델] GBM (Gradient Boost)
+
+## [모델] XGBoost
+(설명: GBM의 느림, 과적합 방지를 위해 Regulation만 추가, 리소스를 적게 먹으며 조기종료 제공)
+
+## [모델] SVM (Support Vector Machine)
+
+## [모델] Auto Encoder
+
+## [모델] CNN
+
+## [모델] RNN
+
+## [모델] LSTM
+
+## [모델] Transformer
+
+## [모델] SES (Simple Exponential Smoothing)
+
+## [모델] YOLO
+
+## [모델] VGG
+
+---
+
 # [1-1.빅데이터 수집]
+
+## "00000.csv" 데이터 로드
+(cp949는 MS office에서 인코딩할때 쓰임)
+~~~py
+df = pd.read_csv ("./00000.csv", encoding = "cp949")
+~~~
+ 
+## 커스텀 프레임웍에서 "00000.csv" 데이터 로드 2
+(custom_framework.config.data_dir 폴더에서 불러옴)
+~~~py
+df = pd.read_csv (custom_framework.config.data_dir + "/00000.csv")
+~~~
+ 
+## 파일위치 환경변수
+data 경로: custom_framework.config.data_dir
+workspace 경로: custom_framework.config.workspace_dir
+model 경로: custom_framework.config.model_dir
+log 경로: custom_framework.config.workspace_logs
+
+## "00000_final.csv" 데이터 저장 1
+~~~py 
+df.to_csv ("00000_final.csv", index = false)
+~~~
+ 
+## "00000_final.xlsx" 엑셀로 저장 2
+~~~py
+df.to_excel ("00000.xlsx")
+~~~
 
 ---
 
@@ -113,194 +188,6 @@ X_train, X_test, y_test =
 # [5.적용]
 
 --------
-
-
- 
-
-### 상관관계 히트맵
-
-sns.heatmap(df.corr( ), annot=True) 
-
- 
-
- 
-
-
- 
-
-## [모델]  sklearn에서, 로지스틱회귀모델(Logistic Regression) 불러오기
-
-## [모델 설명] 분류모델 주로 활용
-
-from sklearn.linear_model import LogisticRegression
-
-※ from sklearn.model_selection import train_test_split
-
- 
-
-### 성능지표 불러오기
-
-from sklearn.metrics import classification_report  
-
- 
-
-## [모델] sklearn에서, 랜덤포레스트 불러오기
-
-## [모델 설명] 의사결정나무 2개에서, 여러개를 더해 예측율을 높임
-
-                       AICE 사이트탐지, 내비, 고객유형, VOD 사례실습 활용
-
-from sklearn.ensemble import RandomForestRegressor
-
- 
-
-## [모델] sklearn에서, 의사결정나무 불러오기
-
-## [모델 설명] 분류/회귀가능한 다재다능, 다소복잡한 데이터셋도 학습가능
-
-                       AICE 사이트탐지, 고객유형예측 사례실습 활용
-
-from sklearn.tree import DecisionTreeClassifier
-
- 
-
--
-
- 
-
-## [모델] AdaBoost
-
-## [모델 설명] AICE 사이트탐지 사례실습 활용
-
- 
-
-## [모델] GBM (Gradient Boost)
-
-## [모델 설명] AICE 사이트탐지, 내비, VOD 사례실습 활용
-
- 
-
-## [모델] XGBoost
-
-## [모델 설명] GBM의 느림, 과적합 방지를 위해 Regulation만 추가
-
-                       리소스를 적게 먹으며 조기종료 제공
-
-                       AICE 내비, 고객유형예측 사례실습 활용
-
- 
-
-## [모델] SVM (Support Vector Machine)
-
-## [모델 설명] AICE VOD 사례실습 활용
-
- 
-
-## [모델] Auto Encoder
-
-## [모델 설명] AICE VOD 사례실습 활용
-
- 
-
-## [모델] CNN
-
-## [모델 설명] AICE 스팸분류 사례실습 활용
-
- 
-
-## [모델] RNN
-
-## [모델 설명] AICE VOD 사례실습 활용
-
- 
-
-## [모델] LSTM
-
-## [모델 설명] AICE 스팸분류, 공기질 사례실습 활용
-
- 
-
-## [모델] Transformer
-
-## [모델 설명] AICE 공기질 사례실습 활용
-
- 
-
-## [모델] SES (Simple Exponential Smoothing)
-
-## [모델 설명] AICE 공기질 사례실습 활용
-
- 
-
-## [모델] YOLO
-
-## [모델 설명] AICE 안전모 사례실습 활용
-
- 
-
-## [모델] VGG
-
-## [모델 설명] AICE 안전모 사례실습 활용
-
- 
-
--------
-
- 
-
-[1-1.빅데이터 수집]
-
- 
-
-## 데이터 로드 1
-
-### cp949는 MS office에서 인코딩할때 쓰임
-
-df = pd.read_csv ("./00000.csv", encoding = "cp949")
-
- 
-
-## 데이터 로드 2
-
-### aidu_framework.config.data_dir 폴더에서 불러옴
-
-df = pd.read_csv (aidu_framework.config.data_dir + "/00000.csv")
-
- 
-
-## 파일위치 환경변수
-
-### data 경로
-
-aidu_framework.config.data_dir
-
-### workspace 경로
-
-aidu_framework.config.workspace_dir
-
-### model 경로
-
-aidu_framework.config.model_dir
-
-### log 경로
-
-aidu_framework.config.workspace_logs
-
- 
-
-## 데이터 저장 1
-
-df.to_csv ("00000_final.csv", index = false)
-
- 
-
-## 엑셀로 저장 2
-
-df.to_excel ("00000.xlsx")
-
- 
-
--------
 
  
 
@@ -506,7 +393,10 @@ sns.boxplot(x="Churn", y="MonthlyCharges", data=df)
 
 sns.jointplot(x="avg_bill", y="age", data=df, kind="hex")
 
- 
+### 상관관계 히트맵
+
+sns.heatmap(df.corr( ), annot=True) 
+
 
 -------
 
