@@ -120,10 +120,10 @@ df = pd.read_csv (custom_framework.config.data_dir + "/00000.csv")
 ~~~
  
 ## 파일위치 환경변수
-data 경로: custom_framework.config.data_dir
-workspace 경로: custom_framework.config.workspace_dir
-model 경로: custom_framework.config.model_dir
-log 경로: custom_framework.config.workspace_logs
+data 경로: custom_framework.config.data_dir  
+workspace 경로: custom_framework.config.workspace_dir  
+model 경로: custom_framework.config.model_dir  
+log 경로: custom_framework.config.workspace_logs  
 
 ## "00000_final.csv" 데이터 저장 1
 ~~~py 
