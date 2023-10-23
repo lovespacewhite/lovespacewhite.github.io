@@ -54,9 +54,8 @@ from tensorflow.keras.layers import Dense, Activation, Dropout
 
 ## [모델] sklearn에서, 선형회귀모델 불러오기
 ~~~py
-from sklearn.family import model  ## 싸이킷런 불러오기
-from sklearn.linear_model import LinearRegression  ## 선형회귀 불러오기
-model = LinearRegression( )  ## 선형회귀를 모델로 사용하기
+from sklearn.family import model
+from sklearn.linear_model import LinearRegression
 ~~~
 
 # [1-1.빅데이터 수집]
