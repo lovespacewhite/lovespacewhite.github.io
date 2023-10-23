@@ -143,46 +143,46 @@ Column Names = 열
 index = 행  
 value = 값  
 
-## 처음 위/아래 10개행을 보여주기
+## df데이터 / 처음 위(head)아래(tail) 10개행을 보여주기
 ~~~py
 df.head( )
 df.head(10)
 df.tail(10)
 ~~~
 
-## df 데이터 형태(row/column수)
+## df데이터 / 형태(row/column수) 확인
 ~~~py
 df.shape
 ~~~
 
-## df 데이터 컬럼내역 출력
+## df데이터 / 컬럼내역 출력
 ~~~py
 df.columns
 ~~~
 
-## df 데이터 로우내역 출력
+## df데이터 / 로우내역 출력
 ~~~py
 df.values
 ~~~
 
-## 자료구조 파악
+## df데이터 / 자료구조 파악
 ~~~py
 df.info( )
 ~~~
 
-## 데이터타입 확인
+## df데이터 / 타입 확인
 ~~~py
 df.dtypes 
 ~~~
 
-## 통계정보  
+## df데이터 / 통계정보  
 mean(평균), std(분산), min/max(최소/최대값)  
 ※ df.describe( ).transpose( )  
 ~~~py
 df.describe( )
 ~~~
 
-## 데이터 상관관계 분석
+## df데이터 / 상관관계 분석
 ~~~py
 df.corr( )
 ~~~
@@ -207,22 +207,22 @@ x[0:4]
 x[:]
 ~~~
 
-## 칼럼마다 결측치 여부 확인
+## df데이터 / 칼럼마다 결측치 여부 확인
 ~~~py
 df.isnull().sum()
 ~~~
 
-## 00000 칼럼의 데이터 확인
+## df데이터 / "00000"컬럼의 데이터 확인
 ~~~py
 df["00000"]
 ~~~
 
-## 00000 칼럼의 값분포 확인
+## df데이터 / "00000"컬럼의 값분포 확인
 ~~~py
 df["00000"].value_counts()
 ~~~
 
-## 00000 칼럼의 값비율 확인
+## df데이터 / "00000"칼럼의 값비율 확인
 ~~~py
 df["00000"].value_counts(normalize=True)
 ~~~
@@ -231,12 +231,12 @@ df["00000"].value_counts(normalize=True)
 
 # [1-3.빅데이터 시각화]
 
-## df데이터 / "00000" 칼럼 시각화 (이산)
+## df데이터 / "00000"칼럼 시각화 (이산)
 ~~~py
 df["00000"].value_counts().plot(kind="bar")
 ~~~
  
-## df데이터 / "00000" 칼럼 시각화 (연속)
+## df데이터 / "00000"칼럼 시각화 (연속)
 ~~~py
 df["00000"].plot(kind="hist")
 ~~~
@@ -246,19 +246,19 @@ df["00000"].plot(kind="hist")
 차트/값 지정 : plt.plot()  
 시각화 출력 : plt.show()  
  
-### df데이터 / "00000"컬럼, 바차트 시각화 1
+### df데이터 / "00000"칼럼, 바차트 시각화 1
 ~~~py
 df["00000"].value_counts( ).plot(kind="bar")
 plt.show( )
 ~~~
  
-### df데이터 / "00000"컬럼, 바차트 시각화 2
+### df데이터 / "00000"칼럼, 바차트 시각화 2
 ~~~py
 df.corr( )["00000"][:-1].sort_values( ).plot(kind="bar")
 sns.pairplot(df)
 ~~~
  
-### df데이터 / "A.B"컬럼, 히스토그램 시각화 3
+### df데이터 / "A.B"칼럼, 히스토그램 시각화 3
 ~~~py
 df["A.B"].plot(kind="hist")
 plt.show( )
@@ -309,6 +309,228 @@ sns.heatmap(df.corr( ), annot=True)
 ---
 
 # [1-4.빅데이터 전처리]
+최고빈번값(Most frequent), 중앙값(Median), 평균값(Mean), 상수값(Constant)  
+
+## 입력데이터에서 제외
+~~~py
+drop( ) 
+~~~
+
+## Null데이터 처리
+~~~py
+dropna( ), fillna( ) 
+~~~
+
+## 누락데이터 처리
+※ axis=0(행), axis=1(열)  
+~~~py
+replace( )
+~~~
+
+---
+
+# 결측치
+
+## 결측치 확인
+missing(결측값수)  
+"_"를 numpy의 null값(결측치)으로 변경  
+~~~py
+df = df.replace("_", np.NaN)
+~~~
+
+## "Class" 열의 결측치값 제외시키기
+~~~py
+df.dropna(subset=["class"])
+~~~
+
+## Listwise 결측치 행 제외시키기  
+(행의 1개값이라도 NaN이면 제외)  
+~~~py
+df.dropna()
+~~~
+
+## Pairwise 결측치 행 제외시키기  
+(행의 모든값이 NaN일때 제외)  
+~~~py
+df.dropna(how="all")
+~~~
+
+### Most frequent(최빈)값 대체하여 채우기  
+(범주형데이터 주로사용)  
+df데이터 / 모두  
+~~~py
+df.fillna(df.mode().iloc[0])
+~~~
+df데이터 / "A"칼럼 결측치를 해당칼럼 최빈값으로 채우기  
+~~~py
+df["A"].fillna(df["A"].mode()[0])
+~~~
+
+## mean(평균), median(중간)값 대체하여 채우기  
+(범주형데이터 주로사용)  
+~~~py
+df.fillna(df.mean()["C1":"C2"])
+~~~
+
+## 앞값(ffill), 뒷값(backfill) 대체하여 채우기
+~~~py
+df = df.fillna(method="ffill")
+~~~
+
+## 주변값과 상관관계로 선형 채우기
+(선형관계형 데이터에서 주로사용)   
+~~~py
+df = df.interpolate()
+~~~
+
+---
+
+# 아웃라이어
+
+## 아웃라이어 제외
+Class열의 H값 제외후 변경  
+~~~py
+df = df [(df["class"]! = "H")]
+~~~
+ 
+## 아웃라이어 변경
+Class열의 H값을 F값으로 변경  
+~~~py
+df["class"] = df["class"].replace("H", "F")
+~~~
+
+제거기준 = (Q3 + IQR * 1.5 보다 큰 값) & (Q1 - IQR * 1.5 보다 작은 값)  
+  
+가.Q1, Q3, IQR 정의
+IQR = Q3(3사분위수)-Q1(1사분위수)  
+~~~py
+Q1 = df[["Dividend","PBR"]].quantile(q=0.25)
+Q3 = df[["Dividend","PBR"]].quantile(q=0.75)
+IQR = Q3-Q1
+~~~
+나.변경  
+~~~py 
+IQR_df = df[(df["Dividend"] <= Q3["Dividend"]+1.5*IQR["Dividend"]) & (df["Dividend"] >= Q1["Dividend"]-1.5*IQR["Dividend"])]
+IQR_df = IQR_df[(IQR_df["PBR"] <= Q3["PBR"]+1.5*IQR["PBR"]) & (IQR_df["PBR"] >= Q1["PBR"]-1.5*IQR["PBR"])]
+IQR_df = IQR_df[["Dividend","PBR"]]
+~~~
+다.확인(박스플롯)  
+~~~py
+IQR_df.boxplot()
+IQR_df.hist(bins=20, figsize=(10,5))
+~~~
+
+---
+
+# Feature Engineering
+
+## 비닝(Binning)
+연속형 변수를 범주형 변수로 만드는 방법  
+
+비닝 / cut :
+(구간값으로 나누기)  
+~~~py
+q1 = df["avg_bill"].quantile(0.25)
+q3 = df["avg_bill"].quantile(0.75)
+
+df["bill_rating"] = pd.cut(
+                 df["avg_bill"],
+                 bins = [0, q1, q3, df["avg_bill"].max()],
+                 labels = ["low", "mid", "high"])
+print (df["bill_rating"].value_counts()]
+~~~ 
+
+비닝 / qcut :
+(구간개수로 나누기)  
+~~~py
+df["bill_rating"] = pd.qcut(
+                 df["avg_bill"],
+                 3,
+                 labels=["low", "mid", ;high"])
+print (df["bill_rating"].value_counts()]
+~~~
+ 
+## 스케일링(Scaling)
+데이터 단위크기를 맞춤으로서 표준화/정규화  
+
+Standard Scaling :  
+평균을 0, 표준편차를 1로 맞추기 (데이터 이상치가 심할경우 사용)  
+~~~py
+df_num = df[["avg_bill", "A_bill", "B_bill"]]
+Standardization_df = (df_num - df_num.mean()) / df_num.std()
+~~~
+ 
+Min-Max Scaling : 
+모든 데이터를 0~1사이로 맞추기  
+~~~py
+from sklearn.preprocessing import MinMaxScaler
+scaler=MinMaxScaler()
+nomalization_df = df_num.copy()
+nomalization_df[:] = scaler.fit_transform(normalization_df[:])
+~~~
+
+-
+
+# 원핫인코딩
+
+## 카테고리형 데이터를 원핫인코딩으로 컬럼 작성
+~~~py
+cols = ["Gender", "Partner", "Dependents", "PhoneService",
+ "MultipleLines", "InternetService", "OnlineSecurity",
+ "OnlineBackup", "DeviceProtection", "TechSupport", "StreamingTV",
+ "StreamingMovies", "Contract", "PaperlessBilling", "PaymentMethod"]
+
+dummies = pd.get_dummies(df[cols], drop_first=True)
+df = df.drop(cols, axis=1)
+df = pd.concat([df, dummies], axis=1)
+~~~
+
+## 카테고리형 데이터를 판다스로 쉽게 원핫인코딩
+~~~py
+data = df[["AA","BB"]]
+one_hot_df = pd.get_dummies(data, columns=["class"])
+one_hot_df
+~~~
+
+-
+
+# OrdinalEncoding
+Categorical feature(범주형 특성)에 대한 순서형 코딩  
+각 범주들을 특성으로 변경하지 않고, 그 안에서 1,2,3 등의 숫자로 변경  
+범주가 너무 많아 one hot encoding을 하기 애매한 상황에서 이용  
+~~~py
+from category_encoders import OrdinalEncoder
+enc1 = OrdinalEncoder(cols = "color")
+df2 = enc1.fit_transform(df2)
+df2
+~~~
+
+---
+
+# 기타 주요작업
+
+## 토탈차지 공백을 0으로 변경후, 소수점 숫자형(float타입)으로 변경
+~~~py
+df["TotalCharge"].replace([" "], ["0"], inplace=True)
+df["TotalCharge"] = df["TotalCharge"].astype(float)
+~~~
+
+## 해지여부 Yes/No를 1,0의 정수형으로 변경
+~~~py
+df["Churn"].replace(["Yes", "No"], [1, 0], inplace=True)
+~~~
+ 
+## 새로운 뉴피처 추가
+~~~py
+df["new_feature"] = df["f_1"]/df["f_2"]
+~~~
+ 
+## distinct 피처 제외 (값종류수)
+distinct=1인 경우, 모든컬럼이 동일하므로 피처에서 제외  
+
+## 편향값
+
+## 순서(인덱스)는 의미의 유무에 따라 제외
 
 ---
 
@@ -357,339 +579,6 @@ X_train, X_test, y_test =
 -----------------------------------------------------------------------------------------------------
 
  
-
-[1-3.빅데이터 시각화]
-
- 
-
-
-
--------
-
- 
-
-[1-4.빅데이터 전처리]
-
- 
-
-## 최고빈번값(Most frequent), 중앙값(Median), 평균값(Mean), 상수값(Constant)
-
- 
-
-## 입력데이터에서 제외
-
-drop( ) 
-
-## Null데이터 처리
-
-dropna( ), fillna( ) 
-
-## 누락데이터 처리
-
-replace( )
-
-※ axis=0(행), axis=1(열)
-
- 
-
----
-
- 
-
-# 결측치
-
- 
-
-## 결측치 확인
-
-### missing(결측값수)
-
- 
-
-## "_"를 numpy의 null값(결측치)으로 변경
-
-df = df.replace("_", np.NaN)
-
- 
-
-## 결측치 행 제외시키기
-
-### Listwise (행의 1개값이라도 NaN이면 제외)
-
-df.dropna()
-
-### Class 열의 결측치값 제외시키기
-
-df.dropna(subset=["class"])
-
-### Pairwise (행의 모든값이 NaN일때 제외)
-
-df.dropna(how="all")
-
- 
-
-## 대체하여 채우기
-
-### mean(평균) or median(중간)값 = 범주형데이터 주로사용
-
-df.fillna(df.mean()["C1":"C2"])
-
-### 앞값(ffill), 뒷값(backfill)
-
-df = df.fillna(method="ffill")
-
-### Most frequent(최빈값) = 범주형데이터 주로사용
-
- 
-
-### 선형방법 등 = 주변값과 상관관계로 선형 채우기
-
-df = df.interpolate()
-
- 
-
----
-
- 
-
-# 아웃라이어
-
- 
-
-## 아웃라이어 제외
-
- 
-
-### ex) Class열의 H값 제외후 변경
-
-df = df [(df["class"]! = "H")]
-
- 
-
-## 아웃라이어 변경
-
- 
-
-### ex) Class열의 H값을 F값으로 변경
-
-df["class"] = df["class"].replace("H", "F")
-
-
-### ex) Q1, Q3, IQR 정의
-
-Q1 = df[["Dividend","PBR"]].quantile(q=0.25)
-
-Q3 = df[["Dividend","PBR"]].quantile(q=0.75)
-
-IQR = Q3-Q1
-
- 
-
-#### IQR = Q3(3사분위수)-Q1(1사분위수)
-
-#### 제거기준 = (Q3 + IQR * 1.5 보다 큰 값) & (Q1 - IQR * 1.5 보다 작은 값)
-
- 
-
-### 변경
-
-IQR_df = df[(df["Dividend"] <= Q3["Dividend"]+1.5*IQR["Dividend"]) & (df["Dividend"] >= Q1["Dividend"]-1.5*IQR["Dividend"])]
-
-IQR_df = IQR_df[(IQR_df["PBR"] <= Q3["PBR"]+1.5*IQR["PBR"]) & (IQR_df["PBR"] >= Q1["PBR"]-1.5*IQR["PBR"])]
-
-IQR_df = IQR_df[["Dividend","PBR"]]
-
- 
-
-### 확인 (박스플롯)
-
-IQR_df.boxplot()
-
-IQR_df.hist(bins=20, figsize=(10,5))
-
- 
-
----
-
- 
-
-# Feature Engineering
-
- 
-
-## 비닝(Binning)
-
-## 연속형 변수를 범주형 변수로 만드는 방법
-
- 
-
-### cut = 구간값으로 나누기
-
-q1 = df["avg_bill"].quantile(0.25)
-
-q3 = df["avg_bill"].quantile(0.75)
-
- 
-
-df["bill_rating"] = pd.cut(
-
-                 df["avg_bill"],
-
-                 bins = [0, q1, q3, df["avg_bill"].max()],
-
-                 labels = ["low", "mid", "high"])
-
-print (df["bill_rating"].value_counts()]
-
- 
-
-### qcut = 구간개수로 나누기
-
-df["bill_rating"] = pd.qcut(
-
-                 df["avg_bill"],
-
-                 3,
-
-                 labels=["low", "mid", ;high"])
-
-print (df["bill_rating"].value_counts()]
-
- 
-
-## 스케일링(Scaling)
-
-### 데이터 단위크기를 맞춤으로서 표준화/정규화
-
- 
-
-#### Standard Scaling : 평균을 0, 표준편차를 1로 맞추기 (데이터 이상치가 심할경우 사용)
-
-df_num = df[["avg_bill", "A_bill", "B_bill"]]
-
-Standardization_df = (df_num - df_num.mean()) / df_num.std()
-
- 
-
-#### Min-Max Scaling : 모든 데이터를 0~1사이로 맞추기
-
-from sklearn.preprocessing import MinMaxScaler
-
-scaler=MinMaxScaler()
-
-nomalization_df = df_num.copy()
-
-nomalization_df[:] = scaler.fit_transform(normalization_df[:])
-
- 
-
--
-
- 
-
-# 원핫인코딩
-
- 
-
-## ex) 카테고리형 데이터를 원핫인코딩으로 컬럼 작성
-
-cols = ["Gender", "Partner", "Dependents", "PhoneService",
-
- "MultipleLines", "InternetService", "OnlineSecurity",
-
- "OnlineBackup", "DeviceProtection", "TechSupport", "StreamingTV",
-
- "StreamingMovies", "Contract", "PaperlessBilling", "PaymentMethod"]
-
- 
-
-dummies = pd.get_dummies(df[cols], drop_first=True)
-
-df = df.drop(cols, axis=1)
-
-df = pd.concat([df, dummies], axis=1)
-
- 
-
-## ex) 판다스로 쉽게 원핫인코딩
-
-data = df[["AA","BB"]]
-
-one_hot_df = pd.get_dummies(data, columns=["class"])
-
-one_hot_df
-
- 
-
- 
-
-# OrdinalEncoding
-
- 
-
-Categorical feature(범주형 특성)에 대한 순서형 코딩
-
-각 범주들을 특성으로 변경하지 않고, 그 안에서 1,2,3 등의 숫자로 변경
-
-범주가 너무 많아 one hot encoding을 하기 애매한 상황에서 이용
-
- 
-
-from category_encoders import OrdinalEncoder
-
-enc1 = OrdinalEncoder(cols = "color")
-
-df2 = enc1.fit_transform(df2)
-
-df2
-
- 
-
----
-
- 
-
-# 기타 주요작업
-
- 
-
-## ex) 토탈차지 공백을 0으로 변경후, 소수점 숫자형(float타입)으로 변경
-
-df["TotalCharge"].replace([" "], ["0"], inplace=True)
-
-df["TotalCharge"] = df["TotalCharge"].astype(float)
-
- 
-
-## ex) 해지여부 Yes/No를 1,0의 정수형으로 변경
-
-df["Churn"].replace(["Yes", "No"], [1, 0], inplace=True)
-
- 
-
-## 카테고리데이터, 더미특성생성
-
-get_dummies( ) 
-
- 
-
-## 새로운 뉴피처 추가
-
-df["new_feature"] = df["f_1"]/df["f_2"]
-
- 
-
-## distinct(값종류수)
-
-### distinct=1인 경우, 모든컬럼이 동일하므로 피처에서 제외
-
- 
-
-## 편향값
-
- 
-
-## 순서(인덱스)는 의미의 유무에 따라 제외
 
  
 
