@@ -4,13 +4,13 @@
 
 # [0-1.Command]
 
-## Jupyter Notebook 명령어
-Shift + Enter : 셀실행 후, 아래셀 선택
-Alt + Enter : 셀실행 후, 아래 빈쉘 생성
-Ctrl + Enter : 셀실행
-A : 위쪽 빈쉘 생성
-B : 아래쪽 빈쉘 생성
-dd : 해당쉘 삭제
+## Jupyter Notebook 명령어  
+Shift + Enter : 셀실행 후, 아래셀 선택  
+Alt + Enter : 셀실행 후, 아래 빈쉘 생성  
+Ctrl + Enter : 셀실행  
+A : 위쪽 빈쉘 생성  
+B : 아래쪽 빈쉘 생성  
+dd : 해당쉘 삭제  
 
 ---
 
