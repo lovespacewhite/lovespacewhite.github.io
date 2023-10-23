@@ -18,7 +18,7 @@ dd : 해당쉘 삭제
 
 ## pandas 불러오고, pd로 정의
 ~~~py
-import pandas as pd
+import pandas as pd """가나다"""
 ~~~
 
 ## numpy 불러오고, np로 정의
