@@ -818,8 +818,8 @@ pred = model.predict(X_test)
 from sklearn.ensemble import RandomForestRegressor
 ~~~
 
-나. model 랜덤포레스트 선정
-~~~py
+나. model 랜덤포레스트 선정  
+~~~py  
 model = RandomForestRegressor
                  (n_estimators=50, ##학습시 생성할 트리갯수
                  max_depth=20, ##트리의 최대 깊이
