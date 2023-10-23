@@ -2,7 +2,15 @@
 
 ---
 
-# [0-1.HW]
+# [0-1.Command]
+
+## Jupyter Notebook 명령어
+Shift + Enter : 셀실행 후, 아래셀 선택
+Alt + Enter : 셀실행 후, 아래 빈쉘 생성
+Ctrl + Enter : 셀실행
+A : 위쪽 빈쉘 생성
+B : 아래쪽 빈쉘 생성
+dd : 해당쉘 삭제
 
 ---
 
@@ -18,16 +26,30 @@ import pandas as pd
 import numpy as np
 ~~~
 
-## seaborn 불러오고, sns로 정의하기
+## seaborn 설치 및 불러오고, sns로 정의하기
+(!: 리눅스 프롬프트 명령어)
 ~~~py
 !pip install seaborn
 import seaborn as sns 
 ~~~
 
 ## matplot 불러오고, plt로 정의하기
+(%: 주피터랩 명령어)
 ~~~py
-import matplotlib.pyplot as plt
 %matplotlib inline
+import matplotlib.pyplot as plt
+~~~
+
+## 텐서플로 불러오고, tf로 정의하기
+~~~py
+import tensorflow as tf
+~~~
+
+## 텐서플로 케라스모델 및 기능 불러오기
+(시퀀스(히든레이어개수)/덴스(노드개수)/액티베이션/과적합방지기능 불러오기)
+~~~py
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Activation, Dropout
 ~~~
 
 # [1-1.빅데이터 수집]
