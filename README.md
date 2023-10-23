@@ -18,7 +18,7 @@ dd : 해당쉘 삭제
 
 ## pandas 불러오고, pd로 정의
 ~~~py
-import pandas as pd """가나다"""
+import pandas as pd
 ~~~
 
 ## numpy 불러오고, np로 정의
@@ -190,30 +190,121 @@ df.corr( )
 ## x의 0번째 데이터 뽑아오기
 ~~~py
 x[0]
-x[-1] /*! x의 뒤에서 1번째 데이터 뽑아오기 */
+~~~
+
+## x의 뒤에서 1번째 데이터 뽑아오기
+~~~py
+x[-1]
 ~~~
 
 ## x의 0~4번째까지 데이터 뽑아오기
+~~~py
 x[0:4]
+~~~
 
 ## x의 전체 데이터 뽑아오기
+~~~py
 x[:]
+~~~
 
 ## 칼럼마다 결측치 여부 확인
+~~~py
 df.isnull().sum()
+~~~
 
 ## 00000 칼럼의 데이터 확인
+~~~py
 df["00000"]
+~~~
 
 ## 00000 칼럼의 값분포 확인
+~~~py
 df["00000"].value_counts()
+~~~
 
 ## 00000 칼럼의 값비율 확인
+~~~py
 df["00000"].value_counts(normalize=True)
+~~~
 
 ---
 
 # [1-3.빅데이터 시각화]
+
+## df데이터 / "00000" 칼럼 시각화 (이산)
+~~~py
+df["00000"].value_counts().plot(kind="bar")
+~~~
+ 
+## df데이터 / "00000" 칼럼 시각화 (연속)
+~~~py
+df["00000"].plot(kind="hist")
+~~~
+ 
+## [Matplotlib] 시각화 (스캐터,바챠트)
+영역 지정 : plt.figure()  
+차트/값 지정 : plt.plot()  
+시각화 출력 : plt.show()  
+ 
+### df데이터 / "00000"컬럼, 바차트 시각화 1
+~~~py
+df["00000"].value_counts( ).plot(kind="bar")
+plt.show( )
+~~~
+ 
+### df데이터 / "00000"컬럼, 바차트 시각화 2
+~~~py
+df.corr( )["00000"][:-1].sort_values( ).plot(kind="bar")
+sns.pairplot(df)
+~~~
+ 
+### df데이터 / "A.B"컬럼, 히스토그램 시각화 3
+~~~py
+df["A.B"].plot(kind="hist")
+plt.show( )
+~~~
+
+### 바 플롯
+~~~py
+plt.bar(x, height)
+~~~
+
+### 히스토그램
+~~~py
+plt.hist(x)
+~~~
+
+### 산점도
+~~~py
+plt.scatter(x, y)
+~~~
+
+### 선 그래프
+~~~py
+plt.plot(data)
+~~~
+ 
+## [Seaborn] 시각화 (히트맵, 통계)
+
+### 카운트 플롯
+~~~py
+sns.countplot(x="A", data=df)
+~~~
+
+### 박스 플롯
+~~~py
+sns.boxplot(x="A", y="B", data=df)
+~~~
+
+### 조인트 플롯
+~~~py
+sns.jointplot(x="A", y="B", data=df, kind="hex")
+~~~
+
+### 상관관계 히트맵
+~~~py
+sns.heatmap(df.corr( ), annot=True) 
+~~~
 
 ---
 
@@ -263,9 +354,7 @@ X_train, X_test, y_test =
 
 # [5.적용]
 
---------
-
--------
+-----------------------------------------------------------------------------------------------------
 
  
 
@@ -273,95 +362,6 @@ X_train, X_test, y_test =
 
  
 
-# 00000 칼럼 시각화 (이산)
-
-df["00000"].value_counts().plot(kind="bar")
-
- 
-
-# 00000 칼럼 시각화 (연속)
-
-df["00000"].plot(kind="hist")
-
- 
-
-# [Matplotlib] 시각화 사용법 (스캐터,바챠트)
-
-## 영역 지정
-
-plt.figure()
-
-## 차트 및 값 지정
-
-plt.plot()
-
-## 시각화 출력
-
-plt.show()
-
- 
-
-### 바 플롯
-
-plt.bar(x, height)
-
-### 히스토그램
-
-plt.hist(x)
-
-### 산점도
-
-plt.scatter(x, y)
-
-### 선 그래프
-
-plt.plot(data)
-
- 
-
-## iris 데이터안의 variety 컬럼, 바차트 시각화 1
-
-iris["variety"].value_counts( ).plot(kind="bar")
-
-plt.show( )
-
- 
-
-## 시각화 2
-
-df.corr( )["MonthlyCharges"][:-1].sort_values( ).plot(kind="bar")
-
-sns.pairplot(df)
-
- 
-
-## iris 데이터안의 sepal.length 컬럼, 히스토그램 시각화 3
-
-iris["sepal.length"].plot(kind="hist")
-
-plt.show( )
-
- 
-
- 
-
-# [Seaborn] 통계용 챠트 (히트맵)
-
-## 카운트 플롯
-
-sns.countplot(x="Churn", data=df)
-
-## 박스 플롯
-
-sns.boxplot(x="Churn", y="MonthlyCharges", data=df)
-
-### 조인트 플롯
-
-sns.jointplot(x="avg_bill", y="age", data=df, kind="hex")
-
-### 상관관계 히트맵
-
-sns.heatmap(df.corr( ), annot=True) 
 
 
 -------
