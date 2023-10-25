@@ -932,6 +932,154 @@ plt.show()
 
 ## CNN
 
+가. 이미지 불러오기
+~~~py
+import os
+from glob import glob
+import tensorflow as tf
+
+FILENAME = 'dataset-new_old.zip'
+glob(FILENAME)
+
+if not os.path.exists('IMAGE') :
+ !mkdir IMAGE
+ !cp dataset-new_old.zip ./IMAGE
+ !cd IMAGE ; unzip dataset-new_old.zip
+
+new_img_path = './IMAGE/new/plastic1.jpg'
+gfile = tf.io.read_file(new_img_path)
+image = tf.io.decode_image(gfile,dtype=tf.float32)
+image.shape
+plt.imshow(image)
+plt.show()
+
+old_img_path = './IMAGE/old/old_plastic1.jpg'
+gfile = tf.io.read_file(old_img_path)
+image.shape
+plt.imshow(image)
+plt.show()
+
+Data Preprocess
+
+num_epochs = 50
+batch_size = 4
+learning_rate = 0.001
+
+input_shape = (384,512,3)  ## size
+num_classes = 2  ## new & old
+
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+
+training_datagen = ImageDataGenerator(
+ rescale = 1./255,
+ validation_split=0.2  # train set : 435*(1-0.2)=348)
+
+test_datagen = ImageDataGenerator(
+ rescale = 1./255,
+ validation_split=0.2  # test set : 435*0.2 = 87)
+~~~
+나. 이미지 읽기, 배치, 셔플, 레이블링
+~~~py
+!rm -rf ./IMAGE/.ipynb_checkpoints 
+
+training_generator
+training_datagen.flow_from_directory(
+ ',/IMAGE/',
+ batch_size = batch_size,
+ target_size = (384,512),  ## size
+ class_mode = 'catrgorical',  ## binary, categorical
+ shuffle = True,
+ subset ='training'  ## training, validation, validation_split 사용하므로 subset 지정
+)
+
+test_generator
+test_datagen.flow_from_directory(
+ ',/IMAGE/',
+ batch_size = batch_size,
+ target_size = (384,512),  ## size
+ class_mode = 'catrgorical',  ## binary, categorical
+ shuffle = True,
+ subset ='validation'  ## training, validation, validation_split 사용하므로 subset 지정
+)
+
+print(training_generator.class_indices)
+
+batch_samples = next(iter(traning_generator))
+
+print('True Value : 'batch_sample[1][0])
+plt.imshow(batch_sample[0][0])
+plt.show()
+~~~
+다. CNN 모델링
+~~~py
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Flatten, Dropout
+from tensorflow.keras.layers import Conv2D, MaxPooling2D
+
+model = Sequential()  ## Feature extraction
+model.add(Conv2D(filters=32,kernel_size=3,activation='relu',input_shape=input_shape))
+model.add(MaxPooling2D(pool_size=2))
+model.add(Conv2D(filters=16,kernel_size=3,activation='relu'))
+model.add(MaxPooling2D(pool_size=2))
+
+model.add(Flatten())  ## Classfication
+model.add(Dense(50, activation='relu'))
+model.add(Dense(2, activation='softmax))
+
+model.summary()
+
+model.compile(
+ optimizer='adam',
+ loss='categorical_crossentropy',  ## 이진분류
+ metrics=['accuracy'])
+
+history = model.fit(training_generator,
+ epochs=3,
+ steps_per_epoch = len(training_generator) / batch_size,
+ validation_steps = len(test_generator) / batch_size,
+ validation_data = test_generator,
+ vervose = 1
+)
+~~~
+라. 성능평가/시각화
+~~~py
+losses = pd.Dataframe(model.history.history)
+losses = head()
+
+losses[['loss','val_loss']].plot()
+
+losses[['loss','val_loss','accuracy','val_accuracy']].plot()
+
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('Accuracy')
+plt.xlabel('Epochs')
+plt.ylable('Acc')
+plt.legend(['acc','val_acc'])
+plt.show()
+~~~
+마. 예측하기
+~~~py
+# test_generator 샘플데이터 가져오기
+# 배치사이즈 32 확인
+batch_img, batch_label = next(iter(test_generator))
+print(batch_img.shape)
+print(batch_label.shape)
+
+# 4개 test 샘플이지미 그려보고 예측해보기
+i = 1
+plt.figure(figsize=(16,30))
+for img, label in list(zip(batch_img, batch_label)):
+ pred = model.predict(img,reshape(-1,384,512,3))
+ pred_t = np.argmax(pred)
+ plt.subplot(8,4,i)
+ plt.title(f'True Value:{np.argmax(label)}, Pred Value:{pred_t})
+ plt.imshow(img)
+ i = i + 1
+~~~
+
+
 ---
 
 ## Stacking
