@@ -187,29 +187,12 @@ df.describe( )
 df.corr( )
 ~~~
 
-## x의 0번째 데이터 뽑아오기
+## 데이터 뽑아오기 
 ~~~py
-x[0]
-~~~
-
-## x의 뒤에서 1번째 데이터 뽑아오기
-~~~py
-x[-1]
-~~~
-
-## x의 0~4번째까지 데이터 뽑아오기
-~~~py
-x[0:4]
-~~~
-
-## x의 전체 데이터 뽑아오기
-~~~py
-x[:]
-~~~
-
-## df데이터 / 칼럼마다 결측치 여부 확인
-~~~py
-df.isnull().sum()
+x[0]  ## x의 0번째 데이터 뽑아오기
+x[-1]  ## x의 뒤에서 1번째 데이터 뽑아오기
+x[0:4]  ## x의 0~4번째까지 데이터 뽑아오기
+x[:]  ## x의 전체 데이터 뽑아오기
 ~~~
 
 ## df데이터 / "00000"컬럼의 데이터 확인
@@ -230,23 +213,13 @@ df["00000"].value_counts(normalize=True)
 ---
 
 # [1-3.빅데이터 시각화]
-
-## df데이터 / "00000"칼럼 시각화 (이산)
-~~~py
-df["00000"].value_counts().plot(kind="bar")
-~~~
- 
-## df데이터 / "00000"칼럼 시각화 (연속)
-~~~py
-df["00000"].plot(kind="hist")
-~~~
  
 ## [Matplotlib] 시각화 (스캐터,바챠트)
 영역 지정 : plt.figure()  
 차트/값 지정 : plt.plot()  
 시각화 출력 : plt.show()  
  
-### df데이터 / "00000"칼럼, 바차트 시각화 1
+### df데이터 / "00000"칼럼, 바차트 시각화 1 (이산)
 ~~~py
 df["00000"].value_counts( ).plot(kind="bar")
 plt.show( )
@@ -258,10 +231,13 @@ df.corr( )["00000"][:-1].sort_values( ).plot(kind="bar")
 sns.pairplot(df)
 ~~~
  
-### df데이터 / "A.B"칼럼, 히스토그램 시각화 3
+### df데이터 / "A.B"칼럼, 히스토그램 시각화 (연속)
 ~~~py
 df["A.B"].plot(kind="hist")
 plt.show( )
+~~~
+~~~py
+df["00000"].plot(kind="hist")
 ~~~
 
 ### 바 플롯
@@ -313,7 +289,11 @@ sns.jointplot(x="A", y="B", data=df, kind="hex")
 
 ### 상관관계 히트맵
 ~~~py
-sns.heatmap(df.corr( ), annot=True) 
+sns.heatmap(df.corr( ), annot=True)  
+~~~
+~~~py
+corr = jiro_df.corr()  ## corr함수로 상관계수 구하기
+sns.heatmap(corr,annot=True)  ## annotation 포함
 ~~~
 
 ---
@@ -322,13 +302,12 @@ sns.heatmap(df.corr( ), annot=True)
 최고빈번값(Most frequent), 중앙값(Median), 평균값(Mean), 상수값(Constant)  
 
 ## 입력데이터에서 제외
+※ axis=0(행), axis=1(열)
 ~~~py
-drop( ) 
+drop( )
 ~~~
-
-## Null데이터 처리
 ~~~py
-dropna( ), fillna( ) 
+df = df.drop('A', axis=1)
 ~~~
 
 ## 누락데이터 처리
@@ -341,7 +320,20 @@ replace( )
 
 # 결측치
 
-## 결측치 확인
+## df데이터 / 칼럼마다 결측치 여부 확인
+~~~py
+df.isnull().sum()
+~~~
+
+## 결측치(Null데이터) 처리
+~~~py
+dropna( ), fillna( ) 
+~~~
+~~~py
+df['float_A'] = df['float_A'].fillna(0)  ##float_A열 결측치 0으로 채우기
+~~~
+
+## 결측치 처리
 missing(결측값수)  
 "_"를 numpy의 null값(결측치)으로 변경  
 ~~~py
@@ -469,6 +461,13 @@ Standard Scaling :
 df_num = df[["avg_bill", "A_bill", "B_bill"]]
 Standardization_df = (df_num - df_num.mean()) / df_num.std()
 ~~~
+~~~py
+from sklearn.preprocessing import StandardScaler
+scaler=StandardScaler()
+
+X_train2 = scaler.fit_transform(X_train1)  ## 정규분포화
+X_train2 = scaler.transform(X_train1)  ## 표준화
+~~~
  
 Min-Max Scaling : 
 모든 데이터를 0~1사이로 맞추기  
@@ -477,6 +476,17 @@ from sklearn.preprocessing import MinMaxScaler
 scaler=MinMaxScaler()
 nomalization_df = df_num.copy()
 nomalization_df[:] = scaler.fit_transform(normalization_df[:])
+~~~
+
+-
+
+# 라벨인코딩
+
+~~~py
+from sklearn.preprocessing import LabelEncoder
+lb = LabelEncoder()
+df['A'] = lb.fit_transform(df['A']
+df
 ~~~
 
 -
@@ -1171,14 +1181,16 @@ import seaborn as sns
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import precision_score, recall_score
 
-y_true = [1, 0, 1, 1, 0, 1]
-y_pred = [0, 0, 1, 1, 0, 0]
-cm = confusion_matrix(y_true, y_pred)
-cm
+y_pred = model.predict(X_test)
+cm = confusion_matrix(y_true=y_test, y_pred=y_pred)
 ~~~
 
 ~~~py
 sns.heatmap(cm, annot=True)
+plt.show()
+
+print(classification_report(y_test, y_pred))
+
 precision_score(y_true, y_pred)
 recall_score(y_true, y_pred)
 ~~~
