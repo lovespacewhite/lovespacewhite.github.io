@@ -609,6 +609,12 @@ linearR_pred = model.predict(X_test)
 ~~~py
 model.summary( )
 ~~~
+
+회귀예측 주요 성과지표  
+~~~py
+import numpy as np
+np.mean((y_pred - y_test) ** 2) ** 0.5
+~~~
  
 ---
 
@@ -743,7 +749,7 @@ model.score(x_test, y_test)
 
 마. 예측
 ~~~py 
-RF_pred = model.predict(x_test)  
+rf_pred = model.predict(x_test)  
 ~~~
 
 바. RMSE값 구하기
@@ -924,6 +930,54 @@ plt.legend(['acc','val_acc'])
 plt.show()
 ~~~
 
+## CNN
+
+---
+
+## Stacking
+개별모델이 예측한 데이터를 기반한 종합예측
+
+~~~py
+from sklearn.ensemle import StackingRegressor, StackingClassifier
+
+stack_models =
+[('LogisticRegression',lg),('KNN',knn),('DecisionTree',dt)]
+
+stacking = StackingClassifier(
+ stack_models, final_estimator=rfc,n_jobs=-1)
+
+stacking.fit(X_train,y_train)
+
+stacking_pred = stacking.predict(X_test)
+
+accuracy_eval('Stacking Ensemble', stacking_pred, y_test)
+~~~
+
+## Weighted Blending
+각 모델 예측값에 대하여 weight를 곱하여 최종계산
+
+~~~py
+final_output = {
+ 'DecisionTree':dt_pred,
+ 'randomforest':rf_pred,
+ 'xgb':xgb_pred,
+ 'lgbm':lgbm_pred,
+ 'stacking':stacking_pred
+}
+
+final_prediction=\
+final_outputs['DecisionTree']*0.1\
++final_outputs['randomforest']*0.2\
++final_outputs['xgb']*0.25\
++final_outputs['lgbm']*0.15\
++final_outputs['stacking']*0.3\
+
+final_prediction = np.where(final_prediction>0.5,1,0) 
+## 가중치값이 0.5 초과하면 1, 그렇지 않으면 0
+
+accuracy_eval('Weighted Blending', final_prediction, y_test)
+~~~
+
 ---
 
 # [4.성능평가]
@@ -1000,11 +1054,6 @@ recall_score(y_true, y_pred)
 
 ## RMSE값 확인하기
 
-회귀예측 주요 성과지표  
-~~~py
-import numpy as np
-np.mean((y_pred - y_test) ** 2) ** 0.5
-~~~
  
 ---
 
