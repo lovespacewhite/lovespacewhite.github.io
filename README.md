@@ -602,7 +602,7 @@ model.fit(X_train, y_train)
 
 다. 예측  
 ~~~py
-predictions = model.predict(X_test)
+linearR_pred = model.predict(X_test)
 ~~~
 
 라. 확인  
@@ -637,8 +637,8 @@ X_train, X_test, y_train, y_test, = train_test_split(
 ~~~py
 model = LogisticRegression( )   
 model.fit(x_train, y_train)
-predictions = model.predict(x_test)
-print(classification_report(y_test, predictions)
+LogisticR_pred = model.predict(x_test)
+print(classification_report(y_test, LogisticR_pred)
 ~~~
  
 ---
@@ -655,7 +655,7 @@ from sklearn.tree import DecisionTreeClassifier
 ~~~py
 model = DecisionTreeClassifier(max_depth=10,random_state=42)
 model.fit(X_train,y_train)
-dt_pred = dt.predict(X_test)
+dt_pred = model.predict(X_test)
 accuracy_eval('DecisionTree',dt_pred,y_test) 
 ~~~
  
@@ -697,7 +697,18 @@ accuracy_eval('lgbm',lgbm_pred,y_test)
 
 -
 
-## 랜덤포레스트(Random Forest)
+## KNN (K-Nearest Neighbor)
+~~~py
+from sklearn.neighbors import KNeighborsClassifier
+model = KneighborsClassifier(n_neighbors=5)
+model.fit(X_train,y_train)
+knn_pred = model.predict(X_test)
+accuracy_eval('K-Nearest Neighbor',knn_pred,y_test)
+~~~
+
+-
+
+## Random Forest
 선형회귀모델 중 하나  
 의사결정나무 2개에서, 여러개를 더해 예측율을 높임  
 
@@ -732,7 +743,7 @@ model.score(x_test, y_test)
 
 마. 예측
 ~~~py 
-prediction = model.predict(x_test)  
+RF_pred = model.predict(x_test)  
 ~~~
 
 바. RMSE값 구하기
@@ -859,6 +870,58 @@ frome sklearn.metrics import classification_report, confusion_matrix
 predictions = model.predict_classes(X_test)
 print(classification_report(y_test, predictions))
 print(confustion_matrix(y_test,predictions))
+~~~
+
+## RNN
+
+RNN 모델링
+~~~py
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Flatten
+from tensorflow.keras.layers import LSTM
+
+X_train.shape, X_test.shape
+
+X_train = X_train.reshape(-1,18,1)
+X_test = X_test.reshape(-1,18,1)
+
+X_train.shape, X_test.shape
+
+model = Sequential()
+model.add(LSTM(32,activation='relu',return_sequences=True,input_shape=(18,1)))
+model.add(LSTM(16,activation='relu',return_sequences=True))
+model.add(Flatten)
+model.add(Dense(8,activation='relu'))
+model.add(Dense(1,activation='sigmoid'))
+
+model.summary()
+
+model.compile(
+ optimizer='adam',
+ loss='binary_crossentropy',  ## 이진분류 : binary_crossentropy
+ metrics=['accuracy'])
+
+
+history = model.fit(x=X_train,y=y_train,
+ epochs=10,
+ batch_size=128,
+ validation_data=(X_test,y_test),
+ verbose=1)
+
+losses = pd.DataFream(model.history.history)
+losses.head()
+losses[['loss','val_loss']].plot()
+
+losses[['loss','val_loss','accuracy','val_accuracy']].plot()
+
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('Accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Acc')
+plt.legend(['acc','val_acc'])
+plt.show()
 ~~~
 
 ---
