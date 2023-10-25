@@ -8,9 +8,9 @@
 Shift + Enter : 셀실행 후, 아래셀 선택  
 Alt + Enter : 셀실행 후, 아래 빈쉘 생성  
 Ctrl + Enter : 셀실행  
-A : 위쪽 빈쉘 생성  
-B : 아래쪽 빈쉘 생성  
-dd : 해당쉘 삭제  
+A : 바깥에서 위쪽 빈쉘 생성  
+B : 바깥에서 아래 빈쉘 생성  
+dd : 바깥에서 해당쉘 삭제  
 
 ---
 
@@ -277,6 +277,16 @@ plt.hist(x)
 ### 산점도
 ~~~py
 plt.scatter(x, y)
+~~~
+
+### 색깔별 산점도 시각화
+~~~py
+groups = df.groupby('variety')
+groups
+for name,group in groups :
+ plt.scatter(x = 'A', y = 'B', data = group, label = name)
+plt.legend()  ## 범례 추가
+plt.show()
 ~~~
 
 ### 선 그래프
@@ -643,15 +653,93 @@ from sklearn.tree import DecisionTreeClassifier
 
 나. 데이터셋(df) 불러오기
 ~~~py
-from sklearn.datasets import df 
-df = df( )
-X = df.dat[ :, 2: ]   ##모든행에 대해서
-y = df.target
-
-dtree_clf = DecisionTreeClassifier(max_depth=2)
-dtree
+model = DecisionTreeClassifier(max_depth=10,random_state=42)
+model.fit(X_train,y_train)
+dt_pred = dt.predict(X_test)
+accuracy_eval('DecisionTree',dt_pred,y_test) 
 ~~~
  
+---
+
+## Ensemble 기법
+1) Bagging  
+2) Boosting : 이전학습 잘못예측한 데이터에 가중치부여해 오차보완  
+3) Stacking : 여러개 모델이 예측한 결과데이터 기반, final_estimator모델로 종합 예측수행
+4) Weighted Blending : 각모델 예측값에 대해 weight 곱하여 최종 아웃풋계산
+
+-
+
+## XGBoost
+
+(!는 리눅스 명령어)  
+~~~py
+!pip install xgboost
+
+from xgboost import XGBClassfier
+model = XGBClassifier(n_estimators=50)
+model.fit(X_train,y_train)
+xgb_pred = model.predict(X_test)
+accuracy_eval('XGBoost',xgb_pred, y_test)
+~~~
+
+- 
+
+## LightGBM
+~~~py 
+!pip install lightGBM
+
+from xgboost import GBMClassfier
+model = LGBMClassifier(n_estimators=3, random_state=42)
+model.fit(X_train,y_train)
+lgbm_pred = model.predict(X_test)
+accuracy_eval('lgbm',lgbm_pred,y_test)
+~~~
+
+-
+
+## 랜덤포레스트(Random Forest)
+선형회귀모델 중 하나  
+의사결정나무 2개에서, 여러개를 더해 예측율을 높임  
+
+가. 랜덤포레스트 불러오기
+~~~py
+from sklearn.ensemble import RandomForestRegressor
+~~~
+
+나. model 랜덤포레스트 선정  
+~~~py  
+model = RandomForestRegressor
+                 (n_estimators=50, ##학습시 생성할 트리갯수
+                 max_depth=20, ##트리의 최대 깊이
+                 random_state=42, ##난수 seed 설정
+                 ...,
+                 criterion="gini", ##분할 품질을 측정하는 기능(디폴트:gini)
+                 min_samples_split=2, ##내부노드를 분할하는데 필요한 최소샘플수
+                 min_samples_leaf=1, ##리프노드에 있어야할 최소샘플수
+                 min_weight_fraction_leaf=0.0, ##가중치가 부여된 min_samples_leaf에서의 샘플수 비율
+                 max_feature="auto") ##각노드에서 분할에 사용할 특징의 최대수
+~~~
+
+다. 테스트 핏
+~~~py
+model.fit(x_train, y_train)
+~~~
+
+라. 스코어
+~~~py
+model.score(x_test, y_test)
+~~~
+
+마. 예측
+~~~py 
+prediction = model.predict(x_test)  
+~~~
+
+바. RMSE값 구하기
+~~~py
+np.mean((y_pred - y_test) ** 2) ** 0.5  
+~~~
+
 ---
 
 ## 딥러닝 모델
@@ -771,85 +859,6 @@ frome sklearn.metrics import classification_report, confusion_matrix
 predictions = model.predict_classes(X_test)
 print(classification_report(y_test, predictions))
 print(confustion_matrix(y_test,predictions))
-~~~
-
----
-
-## Ensemble 기법
-1) Bagging  
-2) Boosting : 이전학습 잘못예측한 데이터에 가중치부여해 오차보완  
-3) Stacking : 여러개 모델이 예측한 결과데이터 기반, final_estimator모델로 종합 예측수행
-4) Weighted Blending : 각모델 예측값에 대해 weight 곱하여 최종 아웃풋계산
-
--
-
-## XGBoost
-
-(!는 리눅스 명령어)  
-~~~py
-!pip install xgboost
-
-from xgboost import XGBClassfier
-model = XGBClassifier(n_estimators=50)
-model.fit(X_train,y_train)
-pred = model.predict(X_test)
-~~~
-
-- 
-
-## LightGBM
-~~~py 
-!pip install lightGBM
-
-from xgboost import GBMClassfier
-model = LGBMClassifier(n_estimators=50)
-model.fit(X_train,y_train)
-pred = model.predict(X_test)
-~~~
-
--
-
-## 랜덤포레스트(Random Forest)
-선형회귀모델 중 하나  
-의사결정나무 2개에서, 여러개를 더해 예측율을 높임  
-
-가. 랜덤포레스트 불러오기
-~~~py
-from sklearn.ensemble import RandomForestRegressor
-~~~
-
-나. model 랜덤포레스트 선정  
-~~~py  
-model = RandomForestRegressor
-                 (n_estimators=50, ##학습시 생성할 트리갯수
-                 max_depth=20, ##트리의 최대 깊이
-                 random_state=42, ##난수 seed 설정
-                 ...,
-                 criterion="gini", ##분할 품질을 측정하는 기능(디폴트:gini)
-                 min_samples_split=2, ##내부노드를 분할하는데 필요한 최소샘플수
-                 min_samples_leaf=1, ##리프노드에 있어야할 최소샘플수
-                 min_weight_fraction_leaf=0.0, ##가중치가 부여된 min_samples_leaf에서의 샘플수 비율
-                 max_feature="auto") ##각노드에서 분할에 사용할 특징의 최대수
-~~~
-
-다. 테스트 핏
-~~~py
-model.fit(x_train, y_train)
-~~~
-
-라. 스코어
-~~~py
-model.score(x_test, y_test)
-~~~
-
-마. 예측
-~~~py 
-prediction = model.predict(x_test)  
-~~~
-
-바. RMSE값 구하기
-~~~py
-np.mean((y_pred - y_test) ** 2) ** 0.5  
 ~~~
 
 ---
